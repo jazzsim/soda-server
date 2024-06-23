@@ -1,1 +1,1 @@
-![Server Infrastructure](https://github.com/jazzsim/soda-server/assets/24294128/7d075ee9-e64e-4490-bb7a-385f16cb18f7)
+![soda-server](https://github.com/jazzsim/soda-server/assets/24294128/3959f52f-64fc-4654-bc13-9b93fe468a3c)

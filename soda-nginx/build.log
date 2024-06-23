@@ -1,0 +1,44 @@
+#0 building with "desktop-linux" instance using docker driver
+
+#1 [internal] load build definition from Dockerfile
+#1 transferring dockerfile: 902B done
+#1 DONE 0.0s
+
+#2 [internal] load metadata for docker.io/library/nginx:latest
+#2 DONE 0.0s
+
+#3 [internal] load .dockerignore
+#3 transferring context: 2B done
+#3 DONE 0.0s
+
+#4 [ 1/15] FROM docker.io/library/nginx:latest
+#4 DONE 0.0s
+
+#5 [internal] load build context
+#5 transferring context: 539B done
+#5 DONE 0.0s
+
+#6 [ 2/15] WORKDIR /app
+#6 CACHED
+
+#7 [ 3/15] COPY nginx.conf /etc/nginx/nginx.conf
+#7 CACHED
+
+#8 [ 4/15] RUN lsb_release -a
+#8 0.084 /bin/sh: 1: lsb_release: not found
+#8 ERROR: process "/bin/sh -c lsb_release -a" did not complete successfully: exit code: 127
+------
+ > [ 4/15] RUN lsb_release -a:
+0.084 /bin/sh: 1: lsb_release: not found
+------
+Dockerfile:13
+--------------------
+  11 |     EXPOSE 80
+  12 |     
+  13 | >>> RUN lsb_release -a
+  14 |     
+  15 |     # Install Go in the container
+--------------------
+ERROR: failed to solve: process "/bin/sh -c lsb_release -a" did not complete successfully: exit code: 127
+
+View build details: docker-desktop://dashboard/build/desktop-linux/desktop-linux/s3f4w3rb6ihp605t55umhkxeo

@@ -20,8 +20,8 @@ type Catbox struct {
 func executeFFmpeg(videoUrl string, filename string) (imgUrl string) {
 	imagePath := "./thumbnails/" + filename + ".png"
 
-	cmd := exec.Command("ffmpeg", "-i", videoUrl, "-vf", "select='eq(n\\,2720)'", "-vframes", "1", imagePath)
-
+	cmd := exec.Command("ffmpeg", "-ss", "07:00", "-i", videoUrl, "-vf", "scale=800:-1'", "-update", "1", "-frames:v", "1", imagePath)
+	
 	var out bytes.Buffer
 	cmd.Stdout = &out
 	if err := cmd.Run(); err != nil {
@@ -74,7 +74,7 @@ func (cat *Catbox) fileUpload(path string) (string, error) {
 			return
 		}
 	}()
-
+	
 	req, _ := http.NewRequest(http.MethodPost, "https://litterbox.catbox.moe/resources/internals/api.php", r)
 	req.Header.Add("Content-Type", m.FormDataContentType())
 

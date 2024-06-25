@@ -1,7 +1,6 @@
 # Use the official Golang image
 FROM golang:latest
 
-# ENV RABBITMQ_URL=amqp://jazzsim:0NMhvG7rDUd2FQ0qaLh@localhost:5672/
 ENV RABBITMQ_URL=amqp://guest:guest@soda-rabbitmq/
 
 # Set the current working directory inside the container

@@ -18,9 +18,9 @@ type Catbox struct {
 }
 
 func executeFFmpeg(videoUrl string, filename string) (imgUrl string) {
-	imagePath := "./thumbnails/" + filename + ".png"
+	imagePath := "./thumbnails/" + filename + ".webp"
 
-	cmd := exec.Command("ffmpeg", "-ss", "07:00", "-i", videoUrl, "-vf", "scale=800:-1'", "-update", "1", "-frames:v", "1", imagePath)
+	cmd := exec.Command("ffmpeg", "-ss", "07:00", "-i", videoUrl, "-vf", "scale=800:-1", "-update", "1", "-frames:v", "1", "-map_metadata", "-1", imagePath)
 	
 	var out bytes.Buffer
 	cmd.Stdout = &out

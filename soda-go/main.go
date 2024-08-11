@@ -4,11 +4,14 @@ import (
 	"context"
 	"encoding/base64"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"log"
 	"net/http"
 	"net/url"
 	"os"
+	"path/filepath"
+	"strings"
 
 	"time"
 
@@ -19,6 +22,9 @@ import (
 )
 
 var conn *amqp.Connection
+
+// Change this to false if you don't want to generate thumbnail
+var generateThumbnail = true
 
 var cache = gocache.New(5*time.Minute, 1*time.Hour)
 
@@ -40,8 +46,10 @@ func failOnError(err error, msg string) {
 }
 
 func main() {
-	// Connect to RabbitMQ server
-	connectRabbitMQ()
+	if generateThumbnail {
+		// Connect to RabbitMQ server
+		connectRabbitMQ()
+	}
 
 	ginMode := os.Getenv("ENV")
 	gin.SetMode(ginMode)
@@ -129,13 +137,17 @@ func (s *HttpServer) verifyUrl() (*url.URL, error) {
 }
 
 func getThumbnail(c *gin.Context) {
+	if !generateThumbnail {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Thumbnail generation is disabled"})
+		return
+	}
 	res, err := consumeThumbnailRequest(c)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to get thumbnail"})
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"message": res})
+	c.JSON(http.StatusOK, gin.H{"thumbnail": res})
 }
 
 func consumeThumbnailRequest(c *gin.Context) (res string, err error) {
@@ -146,6 +158,11 @@ func consumeThumbnailRequest(c *gin.Context) (res string, err error) {
 		// Handle error (e.g., invalid JSON format)
 		c.JSON(http.StatusBadRequest, gin.H{"400 error": err.Error()})
 		return "", err
+	}
+
+	ext := strings.ToLower(filepath.Ext(video.Url))
+	if ext == ".ogg" {
+		return "", errors.New("unsupported format")
 	}
 
 	// check if image is cached
